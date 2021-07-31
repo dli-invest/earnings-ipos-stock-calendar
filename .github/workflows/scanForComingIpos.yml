@@ -1,0 +1,54 @@
+name: Check Prices
+on: 
+  push:
+      - main
+  schedule:
+    - cron:  '0 1 * * 1-5'
+
+env:
+  GOOGLE_SERVICE_CREDS: ${{ secrets.CALENDAR_SERVICE_ACCOUNT }}
+  STOCK_API: ${{ secrets.STOCK_API }}
+  DISCORD_CODE_STATUS_WEBHOOK: ${{ secrets.DISCORD_CODE_STATUS_WEBHOOK }}
+  CALENDAR_ID: ${{ secrets.CALENDAR_ID }}  
+  REMOTE_SELENIUM_URL: ${{ secrets.REMOTE_SELENIUM_URL }}
+  GOOGLE_SEARCH_ENGINE_CX: ${{ secrets.GOOGLE_SEARCH_ENGINE_CX }}
+  GOOGLE_SEARCH_KEY: ${{ secrets.GOOGLE_SEARCH_KEY }}
+  DISCORD_NOTIFICATION_WEBHOOK: ${{ secrets.DISCORD_NEWS_WEBHOOK }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: grandfleet/dopysel:python-3.8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: pip3 install --upgrade pip && pip3 install -r requirements.txt
+      - name: Run Main Script 
+        run: python3 -m es_cal.browser.nasdaq_ipo_dates
+        env:
+          CALENDAR_ID: ${{ secrets.CALENDAR_ID }}  
+      - name: Storing Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-artifact
+          path: artifacts
+#       - name: Push changes
+#         uses: ad-m/github-push-action@master
+#         with:
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+#           branch: ${{ github.ref }}
+      
+      - uses: sarisia/actions-status-discord@v1
+        if: failure()
+        with:
+          webhook: ${{ secrets.DISCORD_CODE_STATUS_WEBHOOK }}
+          status: ${{ job.status }}
+          title: ${{github.repository}}
+          description: "Check Earnings and ipos"
+          nofail: false
+          nocontext: false
+          noprefix: false
+          color: 0x0000ff
+          username: GitHub Actions
+

@@ -1,0 +1,58 @@
+import time
+from es_cal.browser.browser import make_webdriver
+import pandas as pd
+from es_cal.discord import send_message
+from datetime import datetime
+print("STARTING SCRIPT")
+nasdaq_url = "https://www.nasdaq.com/market-activity/ipos"
+driver = make_webdriver("Get Nasdaq Ipos")
+print("MAKING SELENIUM SCRIPT")
+driver.get("https://www.google.com")
+driver.get(nasdaq_url)
+time.sleep(10)
+print("DO SOMETHING SCRIPT")
+page_source = driver.page_source
+
+tables = pd.read_html(page_source, attrs={"class": "market-calendar-table__table"})
+driver.close()
+
+upcoming = tables[0]
+priced = tables[1]
+print(upcoming, priced)
+
+# send discord messages for all the upcoming priced listings that 
+
+upcoming.to_csv("artifacts/upcoming.csv")
+priced.to_csv("artifacts/priced.csv")
+
+# symbol, price, ipo date, offer amount
+
+def mapIpoForDiscord(item: dict):
+    content = f"{item['Company Name']} {item['Expected IPO Date']}"
+    embed = {
+        'title': item["Symbol"],
+        'description': f"{item['Company Name']}",
+        'url': nasdaq_url,
+        'fields': [
+            {
+                'name': "price",
+                "value": item['Price'],
+                "inline": True
+            },
+            {
+                'name': "date",
+                "value": item['Expected IPO Date'],
+                "inline": True
+            },
+        ]
+    }
+    embeds = [embed]
+    return content, embeds
+
+for index, row in upcoming.iterrows():
+    dateRow = row['Expected IPO Date']
+    parsedDate = datetime.strptime(dateRow, "%m/%d/%Y")
+    if (parsedDate - datetime.today()).days >= 0:
+        content, embeds = mapIpoForDiscord(row)
+        send_message(content, embeds)
+        time.sleep(2)

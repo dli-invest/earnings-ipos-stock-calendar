@@ -10,14 +10,12 @@ def send_message(content, embeds=[]):
         if DISCORD_WEBHOOK is None:
             print("NO WEBHOOK AVAILABLE")
             return
-        print("SEND DATA DAMN IT")
         r = requests.post(
             DISCORD_WEBHOOK,
             data=json.dumps(payload),
             headers={"Content-Type": "application/json"},
         )   
         data = r.json()
-        print(data)
         return data
     except Exception as e:
         print(e)
