@@ -56,3 +56,5 @@ for index, row in upcoming.iterrows():
         content, embeds = mapIpoForDiscord(row)
         send_message(content, embeds)
         time.sleep(2)
+else:
+    send_message("[earnings-stock-calendar] - no ipos", [])
