@@ -53,9 +53,9 @@ def mapIpoForDiscord(item: dict):
     return content, embeds
 
 for index, row in upcoming.iterrows():
-    date = item.get("Expected IPO Date")
+    date = row.get("Expected IPO Date")
     if date == None:
-        date = item.get("Date")
+        date = row.get("Date")
     parsedDate = datetime.strptime(date, "%m/%d/%Y")
     if (parsedDate - datetime.today()).days >= 0:
         content, embeds = mapIpoForDiscord(row)
