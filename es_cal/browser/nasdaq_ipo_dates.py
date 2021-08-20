@@ -28,7 +28,10 @@ priced.to_csv("artifacts/priced.csv")
 # symbol, price, ipo date, offer amount
 
 def mapIpoForDiscord(item: dict):
-    content = f"{item['Company Name']} {item['Expected IPO Date']}"
+    date = item.get("Expected IPO Date")
+    if date == None:
+        date = item.get("Date)
+    content = f"{item['Company Name']} {date}"
     embed = {
         'title': item["Symbol"],
         'description': f"{item['Company Name']}",
@@ -41,7 +44,7 @@ def mapIpoForDiscord(item: dict):
             },
             {
                 'name': "date",
-                "value": item['Expected IPO Date'],
+                "value": item['Date'],
                 "inline": True
             },
         ]
@@ -50,8 +53,10 @@ def mapIpoForDiscord(item: dict):
     return content, embeds
 
 for index, row in upcoming.iterrows():
-    dateRow = row['Expected IPO Date']
-    parsedDate = datetime.strptime(dateRow, "%m/%d/%Y")
+    date = item.get("Expected IPO Date")
+    if date == None:
+        date = item.get("Date)
+    parsedDate = datetime.strptime(date, "%m/%d/%Y")
     if (parsedDate - datetime.today()).days >= 0:
         content, embeds = mapIpoForDiscord(row)
         send_message(content, embeds)
