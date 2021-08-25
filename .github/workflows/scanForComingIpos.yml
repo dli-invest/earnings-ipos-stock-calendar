@@ -1,4 +1,4 @@
-name: Check Prices
+name: Check Ipos
 on: 
   push:
      branches:

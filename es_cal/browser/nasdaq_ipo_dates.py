@@ -57,7 +57,7 @@ for index, row in upcoming.iterrows():
     if date == None:
         date = row.get("Date")
     parsedDate = datetime.strptime(date, "%m/%d/%Y")
-    if (parsedDate - datetime.today()).days >= 0:
+    if (parsedDate - datetime.today()).days >= 1:
         content, embeds = mapIpoForDiscord(row)
         send_message(content, embeds)
         time.sleep(2)
