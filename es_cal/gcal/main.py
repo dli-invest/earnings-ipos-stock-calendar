@@ -1,17 +1,14 @@
 """A simple example of how to access the Google Analytics API."""
 
-# Refactor to have calendar service as it's own file
-# TODO figure out how to make my credentials load in a pipeline
-# TODO Do not double add events or fuck it and duplicate it
-# TODO move to object oriented programming
-# Check if stocks are in trading view.
-# Recurrent stock earnings should be static for large companies
+# 1. Create a dictionary with the event data
+# 2. Create a service object with the credentials
+# 3. Call the calendar API
+# 4. Add the event to the calendar
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from datetime import date
 from es_cal.gcal.utils import decode_json
 from es_cal.gcal.config import scopes as gscopes, calendarId as gcalendarId
-
 
 def get_service(api_name, api_version, scopes, key_file_location):
     """Get a service that communicates to a Google API.

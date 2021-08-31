@@ -17,6 +17,12 @@ from es_cal.discord import send_message
 from es_cal.gcal.utils import get_tickers, split_string
 
 
+"""
+1. Open the website
+2. Wait for the table to load
+3. Grab the table
+4. Close the browser
+"""
 def get_earnings():
     driver = make_webdriver()
 

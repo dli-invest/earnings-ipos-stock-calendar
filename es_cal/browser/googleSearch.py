@@ -4,6 +4,13 @@ from es_cal.discord import send_message
 BASE_SEARCH_URL="https://www.googleapis.com/customsearch/v1?"
 
 
+"""
+    1. First, we get the search data from the Google Custom Search API.
+    2. Then, we parse the response to get the first item from the search results.
+    3. Then, we map the item to a dictionary that we can send to Discord.
+    4. Finally, we send the message to Discord.
+"""
+
 def searchGoogle(query: str):
     gsk = os.getenv("GOOGLE_SEARCH_KEY")
     gsecx = os.getenv("GOOGLE_SEARCH_ENGINE_CX")
