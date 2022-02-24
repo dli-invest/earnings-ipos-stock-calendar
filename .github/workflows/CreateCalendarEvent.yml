@@ -9,6 +9,10 @@ on:
         required: true
         type: string
 
+env:
+  GOOGLE_SERVICE_CREDS: ${{ secrets.CALENDAR_SERVICE_ACCOUNT }}
+  CALENDAR_ID: ${{ secrets.CALENDAR_ID }} 
+
 jobs:
   output_data:
     runs-on: ubuntu-latest
