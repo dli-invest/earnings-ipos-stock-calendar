@@ -29,4 +29,4 @@ jobs:
         run: echo The date is ${{ github.event.inputs.date }} 
 
       - name: Output details
-        run: python3 -m es_cal.cron_api.cron ${{ github.event.inputs.summary }} ${{ github.event.inputs.date }} 
+        run: python3 -m es_cal.cron_api.cron "${{ github.event.inputs.summary }}" ${{ github.event.inputs.date }} 
