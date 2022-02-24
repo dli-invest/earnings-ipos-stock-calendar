@@ -23,3 +23,9 @@ To run ipos mapper
 ```
 python -m es_cal.browser.fetch_ipos
 ```
+
+To run the workflow generation script
+
+```
+python3 -m es_cal.cron_api.cron "test summary" 2022-03-04
+```

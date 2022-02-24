@@ -1,0 +1,24 @@
+name: Create Calendar in GOOGLE
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        required: true
+        type: string
+      summary:
+        required: true
+        type: string
+
+jobs:
+  output_data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print the summary to STDOUT
+        run: echo The tag is ${{ github.event.inputs.summary }} 
+
+      - name: Print the date to STDOUT
+        run: echo The date is ${{ github.event.inputs.date }} 
+
+      - name: Output details
+        run: python3 -m es_cal.cron_api.cron ${{ github.event.inputs.summary }} ${{ github.event.inputs.date }} 
