@@ -3,7 +3,7 @@
 # simple def main program that outputs summary and date from command line arguments
 
 import sys
-from es_cal.gcal.main import make_event_data
+from es_cal.gcal.main import make_event_in_gcal
 
 def main(summary: str, date: str):
     # assert date is str in YYYY-MM-DD format
@@ -15,7 +15,7 @@ def main(summary: str, date: str):
         sys.exit(1)
 
     # create event in google calendar using summary and date
-    make_event_data(summary, date)
+    make_event_in_gcal(summary, date)
 
 if __name__ == '__main__':
     # get command line args
