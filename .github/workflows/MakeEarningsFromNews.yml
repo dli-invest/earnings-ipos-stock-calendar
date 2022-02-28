@@ -1,4 +1,4 @@
-name: Check Prices
+name: Get All news from fauna
 on: 
   push:
     branches:
