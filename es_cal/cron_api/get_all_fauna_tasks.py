@@ -20,7 +20,10 @@ def main():
         )
     )
 
-    for document in documents:
+    for document in documents.get("data"):
+        print(document)
+        data = document.get("data")
+        print(data)
         doc = nlp(document["data"]["title"])
         extracted_date = None
         extracted_title = document["data"]["title"]
@@ -29,6 +32,18 @@ def main():
             # ignore "dates" if they can be parsed as a number
             if ent.label_ == "DATE":
                 try:
+                    if ent.text in ["Today", "Tomorrow", "Yesterday", "Decade", "40-Year", "Friday", "Thursday", "Wednesday", "Tuesday", "Monday", "Sunday", "Saturday", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", "Last Year", "Next Week's"]:
+                        continue
+
+                    if "Week" in ent.text:
+                        continue
+                    if "year" in ent.text:
+                        continue
+                    if "Year" in ent.text:
+                        continue
+
+                    if "-" in ent.text:
+                        continue
                     num = int(ent.text, 10)
                     pass
                 except ValueError as e:
@@ -36,9 +51,13 @@ def main():
                     # dont want the number to be parsed as a date
                     extracted_date = dateparser.parse(ent.text)
                     if extracted_date != None:
+                        if extracted_date.strftime('%Y-%m-%d') == datetime.now().strftime('%Y-%m-%d'):
+                            extracted_date = None
+                            continue
                         break
 
         if extracted_date != None:
+            print(extracted_date)
             fmt_date = extracted_date.strftime("%Y-%m-%d")
             make_event_from_data(extracted_title, fmt_date)
             extracted_date = None
