@@ -10,7 +10,7 @@ on:
 env:
   GOOGLE_SERVICE_CREDS: ${{ secrets.CALENDAR_SERVICE_ACCOUNT }}
   CALENDAR_ID: ${{ secrets.CALENDAR_ID }} 
-  FAUNA_SECRET: ${{ secrets.FAUNA_SECRET }}
+  FAUNA_SECRET: ${{ secrets.FAUNA_AI_ACCESS_TOKEN }}
 jobs:
   build:
     runs-on: ubuntu-latest
