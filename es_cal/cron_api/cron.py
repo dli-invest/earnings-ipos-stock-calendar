@@ -5,7 +5,7 @@
 import sys
 from es_cal.gcal.main import make_event_in_gcal
 
-def main(summary: str, date: str):
+def make_event_from_data(summary: str, date: str):
     # assert date is str in YYYY-MM-DD format
     if summary is None:
         print("Error: summary is None")
@@ -21,4 +21,4 @@ if __name__ == '__main__':
     # get command line args
     summary = sys.argv[1]
     date = sys.argv[2]
-    main(summary, date)
+    make_event_from_data(summary, date)

@@ -1,0 +1,45 @@
+name: Check Prices
+on: 
+  push:
+    branches:
+      - master
+      - main
+  schedule:
+    - cron:  '1 11-20/2 * * *'
+
+env:
+  GOOGLE_SERVICE_CREDS: ${{ secrets.CALENDAR_SERVICE_ACCOUNT }}
+  CALENDAR_ID: ${{ secrets.CALENDAR_ID }} 
+  FAUNA_SECRET: ${{ secrets.FAUNA_SECRET }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: grandfleet/dopysel:python-3.8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: pip3 install --upgrade pip && pip3 install -r requirements.txt
+      - name: Print the summary to STDOUT
+        run: | 
+          pip3 install spacy
+          python3 -m spacy download en_core_web_sm
+          
+
+      - name: Fetch Details
+        run: python3 -m es_cal.cron_api.get_all_fauna_tasks 
+      
+      - uses: sarisia/actions-status-discord@v1
+        if: failure()
+        with:
+          webhook: ${{ secrets.DISCORD_CODE_STATUS_WEBHOOK }}
+          status: ${{ job.status }}
+          title: ${{ github.repository }}
+          description: "Make Earnings From News"
+          nofail: false
+          nocontext: false
+          noprefix: false
+          color: 0x0000ff
+          username: GitHub Actions
+
