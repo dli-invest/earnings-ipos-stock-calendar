@@ -28,9 +28,12 @@ def main():
         doc = nlp(document["data"]["title"])
         extracted_date = None
         extracted_title = document["data"]["title"]
-        multiword_list  = ["next week's", "simply wall", "three years"]
+        multiword_list  = ["next week's", "simply wall", "three years", "zacks"]
             # check if extracted_title has any substrings in multiword list
-        if any(x in extracted_title for x in multiword_list):
+        pattern = re.compile(r'\b(?:' + '|'.join(re.escape(s) for s in multiword_list) + r')\b')
+        matches = pattern.findall(extracted_title.lower())
+        if len(matches) > 0:
+            print(matches)
             print(extracted_title)
             continue
         for ent in doc.ents:
