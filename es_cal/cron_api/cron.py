@@ -15,7 +15,7 @@ def make_event_from_data(summary: str, date: str):
         sys.exit(1)
 
     # create event in google calendar using summary and date
-    make_event_in_gcal(summary, date)
+    return make_event_in_gcal(summary, date)
 
 if __name__ == '__main__':
     # get command line args

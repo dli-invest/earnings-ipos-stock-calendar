@@ -2,8 +2,11 @@
 
 # simple def main program that outputs summary and date from command line arguments
 import os
+import re
 from es_cal.cron_api.cron import make_event_from_data
+from es_cal.discord.notify import send_message
 import spacy
+import time
 import dateparser
 # from es_cal.cron_api.cron import make_event_from_data
 from faunadb import client, query as q
@@ -21,33 +24,26 @@ def main():
     )
 
     for document in documents.get("data"):
-        print(document)
         data = document.get("data")
-        print(data)
         doc = nlp(document["data"]["title"])
         extracted_date = None
         extracted_title = document["data"]["title"]
+        multiword_list  = ["next week's", "simply wall", "three years"]
+            # check if extracted_title has any substrings in multiword list
+        if any(x in extracted_title for x in multiword_list):
+            print(extracted_title)
+            continue
         for ent in doc.ents:
-            print(ent.text, ent.start_char, ent.end_char, ent.label_)
             # ignore "dates" if they can be parsed as a number
             if ent.label_ == "DATE":
                 try:
-                    if ent.text in ["Today", "Tomorrow", "Yesterday", "Decade", "40-Year", "Friday", "Thursday", "Wednesday", "Tuesday", "Monday", "Sunday", "Saturday", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", "Last Year", "Next Week's"]:
+                    if ent.text.lower() in ["today", "tomorrow", "yesterday", "decade", "40-year", "friday", "thursday", "wednesday", "tuesday", "monday", "sunday", "saturday", "january", "February", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december", "last year", "next week's", "week", "-"]:
                         continue
-
-                    if "Week" in ent.text:
-                        continue
-                    if "year" in ent.text:
-                        continue
-                    if "Year" in ent.text:
-                        continue
-
-                    if "-" in ent.text:
-                        continue
+                    # check ent.text in multiword list contains
                     num = int(ent.text, 10)
-                    pass
+
                 except ValueError as e:
-                    print(e)
+                    # print(e)
                     # dont want the number to be parsed as a date
                     extracted_date = dateparser.parse(ent.text)
                     if extracted_date != None:
@@ -57,10 +53,16 @@ def main():
                         break
 
         if extracted_date != None:
-            print(extracted_date)
+            # re.IGNORECASE
+            # make sure its an earnings call
+            # must contain word quarter, results, annual report or months ended
             fmt_date = extracted_date.strftime("%Y-%m-%d")
-            make_event_from_data(extracted_title, fmt_date)
+            new_event = make_event_from_data(extracted_title, fmt_date)
+            if new_event:
+                send_message(extracted_title, [])
+                time.sleep(2)
             extracted_date = None
+            # send to discord
             continue
 
         # Spacy matcher TODO

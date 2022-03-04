@@ -101,6 +101,7 @@ def make_event_in_gcal(event_name, date):
     calendarId = gcalendarId
     if check_if_event_exists(service, event_name):
         print(f"{event_name} exists already, not creating event")
+        return False
     else:
         event_data = make_event_data(event_name, date)
         print(event_data)
@@ -108,6 +109,7 @@ def make_event_in_gcal(event_name, date):
             service.events().insert(calendarId=calendarId, body=event_data).execute()
         )
         print("Event created: %s" % (event.get("htmlLink")))
+        return True
 
 
 def main():
