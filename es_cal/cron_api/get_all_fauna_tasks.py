@@ -28,7 +28,7 @@ def main():
         doc = nlp(document["data"]["title"])
         extracted_date = None
         extracted_title = document["data"]["title"]
-        multiword_list  = ["next week's", "simply wall", "three years", "zacks"]
+        multiword_list  = ["next week's", "simply wall", "three years", "zacks", "virtual investor conference"]
             # check if extracted_title has any substrings in multiword list
         pattern = re.compile(r'\b(?:' + '|'.join(re.escape(s) for s in multiword_list) + r')\b')
         matches = pattern.findall(extracted_title.lower())
@@ -40,7 +40,7 @@ def main():
             # ignore "dates" if they can be parsed as a number
             if ent.label_ == "DATE":
                 try:
-                    if ent.text.lower() in ["today", "tomorrow", "yesterday", "decade", "40-year", "friday", "thursday", "wednesday", "tuesday", "monday", "sunday", "saturday", "january", "February", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december", "last year", "next week's", "week", "-"]:
+                    if ent.text.lower() in ["today", "tomorrow", "yesterday", "decade", "40-year", "friday", "thursday", "wednesday", "tuesday", "monday", "sunday", "saturday", "january", "February", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december", "last year", "next week's", "week", "-", "zacks", "roadshow"]:
                         continue
                     # check ent.text in multiword list contains
                     num = int(ent.text, 10)
