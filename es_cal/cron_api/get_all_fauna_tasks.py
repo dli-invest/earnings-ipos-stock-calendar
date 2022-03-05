@@ -28,7 +28,7 @@ def main():
         doc = nlp(document["data"]["title"])
         extracted_date = None
         extracted_title = document["data"]["title"]
-        multiword_list  = ["next week's", "simply wall", "three years", "zacks", "virtual investor conference"]
+        multiword_list  = ["next week's", "simply wall", "three years", "zacks", "virtual investor conference", "motley fool", "roadshow series", "institutional investors conference"]
             # check if extracted_title has any substrings in multiword list
         pattern = re.compile(r'\b(?:' + '|'.join(re.escape(s) for s in multiword_list) + r')\b')
         matches = pattern.findall(extracted_title.lower())
