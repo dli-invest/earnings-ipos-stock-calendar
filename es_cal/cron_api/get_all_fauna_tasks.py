@@ -28,8 +28,10 @@ def insert_row_to_db(doc, extracted_date):
     exchange = data.get("exchange", "")
     company = data.get("company", "")
     url = data.get("url", "")
+    print("ATTEMPT TO INSERT VALUES")
     with psycopg.connect(**conn_dict) as conn:
         conn.execute("INSERT INTO events VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (extracted_date, title, description, source, country, exchange, url, company))
+    print("WHAT IS GOING ON HERE")
 
 def main():
     FAUNA_SECRET = os.getenv("FAUNA_SECRET")
@@ -76,6 +78,12 @@ def main():
                         break
 
         if extracted_date != None:
+            try:
+                insert_row_to_db(doc, extracted_date)
+                print("SUCCESSFULLY ADDED ROW TO COCKROACH DB")
+            except Exception as e:
+                print(e)
+                print("FAILED TO CREATE EVENT")
             # re.IGNORECASE
             # make sure its an earnings call
             # must contain word quarter, results, annual report or months ended
@@ -85,11 +93,6 @@ def main():
                 send_message(extracted_title, [])
                 time.sleep(2)
             extracted_date = None
-            try:
-                insert_row_to_db(doc, extracted_date)
-                print("SUCCESSFULLY ADDED ROW TO COCKROACH DB")
-            except Exception as e:
-                print(e)
             # send to discord
             continue
 
