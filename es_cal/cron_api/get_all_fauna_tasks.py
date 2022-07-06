@@ -11,6 +11,25 @@ import dateparser
 # from es_cal.cron_api.cron import make_event_from_data
 from faunadb import client, query as q
 from datetime import datetime
+import os
+import psycopg
+
+def insert_row_to_db(doc, extracted_date):
+    """
+    doc from fauna db instance, likely a bunch of data missing
+    """
+    data = doc["data"]
+    conn_dict =  psycopg.conninfo.conninfo_to_dict(os.environ["COCKROACH_DB_URL"])
+    #     conn.execute("CREATE TABLE events (date date, title text, description text, source text, country text, exchange text, url text, company text)")
+    title = data.get("title", "")
+    description = data.get("description", "")
+    source = data.get("source", "faunadb")
+    country = data.get("country", "us")
+    exchange = data.get("exchange", "")
+    company = data.get("company", "")
+    url = data.get("url", "")
+    with psycopg.connect(**conn_dict) as conn:
+        conn.execute("INSERT INTO events VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (extracted_date, title, description, source, country, exchange, url, company))
 
 def main():
     FAUNA_SECRET = os.getenv("FAUNA_SECRET")
@@ -66,10 +85,16 @@ def main():
                 send_message(extracted_title, [])
                 time.sleep(2)
             extracted_date = None
+            try:
+                insert_row_to_db(doc, extracted_date)
+                print("SUCCESSFULLY ADDED ROW TO COCKROACH DB")
+            except Exception as e:
+                print(e)
             # send to discord
             continue
 
         # Spacy matcher TODO
+        # might move this funcitonality to the latex report I will likely be generating
         # check if docs meet other criteria
         # send to discord channel for now
         # terms are

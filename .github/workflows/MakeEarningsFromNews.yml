@@ -12,6 +12,7 @@ env:
   CALENDAR_ID: ${{ secrets.CALENDAR_TEST_ID_EARNINGS_IPO }} 
   FAUNA_SECRET: ${{ secrets.FAUNA_AI_ACCESS_TOKEN }}
   DISCORD_NOTIFICATION_WEBHOOK: ${{secrets.DISCORD_EARNINGS_WEBHOOK }}
+  COCKROACH_DB_URL: ${{ secrets.COCKROACH_DB_URL }}
 jobs:
   build:
     runs-on: ubuntu-latest
