@@ -36,6 +36,7 @@ def insert_row_to_db(doc, extracted_date):
 
 def main():
     FAUNA_SECRET = os.getenv("FAUNA_SECRET")
+    COCKROACH_DB_URL = os.environ["COCKROACH_DB_URL"]
     fClient = client.FaunaClient(FAUNA_SECRET, domain="db.us.fauna.com")
     nlp = spacy.load("en_core_web_sm")
     documents = fClient.query(
@@ -89,7 +90,7 @@ def main():
 
         if extracted_date != None:
             try:
-                insert_row_to_db(doc, extracted_date)
+                insert_row_to_db(document, extracted_date)
                 print("SUCCESSFULLY ADDED ROW TO COCKROACH DB")
             except Exception as e:
                 print(e)
@@ -104,7 +105,8 @@ def main():
                 time.sleep(2)
             
             # add to csv
-            df = df.append({"date": fmt_date, "title": extracted_title, "description": doc.get("description", ""), "source": doc.get("source", "faunadb"), "country": doc.get("source", "us"), "exchange": doc.get("exchange", ""), "url": doc.get("url", ""), "company": doc.get("company", "")}, ignore_index=True)
+            data = document.get("data")
+            df = df.append({"date": fmt_date, "title": extracted_title, "description": data.get("description", ""), "source": data.get("source", "faunadb"), "country": data.get("source", "us"), "exchange": data.get("exchange", ""), "url": data.get("url", ""), "company": data.get("company", "")}, ignore_index=True)
             extracted_date = None
             # send to discord
             continue
