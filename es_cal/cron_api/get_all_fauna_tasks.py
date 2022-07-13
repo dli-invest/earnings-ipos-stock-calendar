@@ -13,6 +13,7 @@ from faunadb import client, query as q
 from datetime import datetime
 import os
 import psycopg
+import pandas as pd
 
 def insert_row_to_db(doc, extracted_date):
     """
@@ -43,6 +44,15 @@ def main():
             q.paginate(q.documents(q.collection("Article")), size=100000),
         )
     )
+
+    # pandas read document from csv
+    # check if es_cal/data/earnings.csv exists
+    # if not, create it
+    # if it does, read it
+    if not os.path.exists("es_cal/data/earnings.csv"):
+        df = pd.DataFrame(columns=["date", "title", "description", "source", "country", "exchange", "url", "company"])
+    else:
+        df = pd.read_csv("es_cal/data/earnings.csv")
 
     transcript_docs = []
     for document in documents.get("data"):
@@ -92,6 +102,9 @@ def main():
             if new_event:
                 send_message(extracted_title, [])
                 time.sleep(2)
+            
+            # add to csv
+            df = df.append({"date": fmt_date, "title": extracted_title, "description": doc.get("description", ""), "source": doc.get("source", "faunadb"), "country": doc.get("source", "us"), "exchange": doc.get("exchange", ""), "url": doc.get("url", ""), "company": doc.get("company", "")}, ignore_index=True)
             extracted_date = None
             # send to discord
             continue
