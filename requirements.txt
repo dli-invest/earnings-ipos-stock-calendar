@@ -1,13 +1,13 @@
-selenium==3.141.0
-pandas==1.4.0
-pyvirtualdisplay==0.2.5
-lxml==4.5.0
-google_api_python_client==1.8.2
-google-auth==1.14.2
-requests==2.22.0
-html5lib==1.1
-beautifulsoup4==4.9.1
-icecream==2.1.0
+selenium
+pandas
+pyvirtualdisplay
+lxml
+google_api_python_client
+google-auth
+requests[socks]
+html5lib
+beautifulsoup4
+icecream
 psycopg
 # Use my webhook
 # apprise>=0.8.4
