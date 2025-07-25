@@ -1,11 +1,6 @@
 name: Get All news from fauna
 on: 
-  push:
-    branches:
-      - master
-      - main
-  schedule:
-    - cron:  '1 11-20/2 * * *'
+  workflow_dispatch:
 
 env:
   GOOGLE_SERVICE_CREDS: ${{ secrets.CALENDAR_SERVICE_ACCOUNT }}
