@@ -30,3 +30,5 @@ To run the workflow generation script
 python3 -m spacy download en_core_web_sm
 python3 -m es_cal.cron_api.cron "test summary" 2022-03-04
 ```
+
+We need to update this script every 60 days.
