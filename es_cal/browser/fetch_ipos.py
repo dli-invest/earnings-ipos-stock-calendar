@@ -13,6 +13,7 @@ def convert_ipo_date(date: str):
 def fetch_ipos(marketwatch_url = "https://www.marketwatch.com/tools/ipo-calendar"):
     resp = requests.get(marketwatch_url)
     html = resp.text
+    print(html)
     try:
         html_table_list = pd.read_html(html, attrs={"class": "ranking"})
         lastweek, upcoming = html_table_list[1], html_table_list[2]
